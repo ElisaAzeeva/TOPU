@@ -26,14 +26,26 @@ namespace CursTOPU
         }
         static void GetMatr(string fNAME_MATR, int[,] intArray)
         {
-            FileStream f = new FileStream(fNAME_MATR, FileMode.Open);
-            StreamReader reader = new StreamReader(f);
-            for (int i = 0; i < intArray.GetLength(0); i++)
+
+            using (var sr = new StreamReader(fNAME_MATR))
             {
-                for (int j = 0; j < intArray.GetLength(1); j++)
-                    intArray[i, j] = reader.Read();   
+                for (int i = 0; i < intArray.GetLength(0); i++)
+                {
+                    var elements = sr.ReadLine().Split();
+                    for (int j = 0; j < elements.Length; j++)
+                        intArray[i, j] = Convert.ToInt32(elements[j]);
+                }
             }
-            reader.Close();
+
+
+        //    FileStream f = new FileStream(fNAME_MATR, FileMode.Open);
+        //    StreamReader reader = new StreamReader(f);
+        //    for (int i = 0; i < intArray.GetLength(0); i++)
+        //    {
+        //        for (int j = 0; j < intArray.GetLength(1); j++)
+        //            intArray[i, j] = reader.Read();   
+        //    }
+        //    reader.Close();
         }
         static void PrintArr(int[,] intArray)
         {
@@ -46,8 +58,8 @@ namespace CursTOPU
         }
         static int GetL(int[,] ABR)
         {
-            var res = (from int x in ABR select x).Skip(M - 1).Take(1).Max();
-            //var max = (from int x in ABR select x).Max();
+            var res = (from int x in ABR select x).Skip(M*(N+M)).Take(M+N).Max();
+            //var res = (from int x in ABR select x).Max();
             return (int)res;
         }
     }
